@@ -121,12 +121,18 @@ Here is the status of the players:
 {'\n'.join(f"{player.name}: {'alive' if player.alive else 'dead'}" for player in self.players)}
 
 Remember that this is Mafia - you can lie about your role, distort, play the truth - whatever it takes to win, regardless if you're good or bad.
-Pay attention to the previous chat history, and interact with the other players. Keep your message below three sentences.
+Pay attention to the previous chat history, and interact with the other players. Keep your message below three sentences. The text will be
+spoken verbatim, so do not include any subtexts or asterisks.
 """
             message = self.client.complete(prompt)
             print("chat", self.client.last_duration)
 
             emit("aiMessage", {"player": agent, "text": message})
+
+            wav_bytes = self.tts_client.to_wav(agent, message)
+            emit("audio", wav_bytes)
+            print("tts", self.tts_client.last_duration)
+
             self.chat_history.append((agent, message))
 
             socketio.sleep(2)
@@ -177,7 +183,7 @@ mafia members eliminated by detective: {self.players[detective_eliminated].name 
 """
         summary = self.client.complete(prompt)
         print("getting tts wav")
-        # wav_bytes = self.tts_client.to_wav(summary[:100])
+        # wav_bytes = self.tts_clientdd.to_wav(summary[:100])
         # print(len(wav_bytes))
         # emit('audio', wav_bytes)
 
