@@ -42,9 +42,11 @@ def start_game(data):
     
     emit('newRound', {
         "round": game.day,
-        "mafiaEliminated": night.mafia_eliminated,
-        "detectiveEliminated": night.detective_eliminated,
-        "doctorSaved": night.doctor_saved
+        # "mafiaEliminated": night.mafia_eliminated,
+        # "detectiveEliminated": night.detective_eliminated,
+        # "doctorSaved": night.doctor_saved,
+        "summary": night.summary,
+        "aliveState": night.alive_state
     })
 
 @socketio.on("chat")
@@ -57,9 +59,11 @@ def continue_round():
     night = game.run_night()
     emit('newRound', {
         "round": game.day,
-        "mafiaEliminated": night.mafia_eliminated,
-        "detectiveEliminated": night.detective_eliminated,
-        "doctorSaved": night.doctor_saved
+        # "mafiaEliminated": night.mafia_eliminated,
+        # "detectiveEliminated": night.detective_eliminated,
+        # "doctorSaved": night.doctor_saved,
+        "summary": night.summary,
+        "aliveState": night.alive_state
     })
 
 

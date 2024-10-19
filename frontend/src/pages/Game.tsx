@@ -2,17 +2,25 @@ import { useContext, useEffect, useState } from "react";
 import Chat from "../components/chat";
 import { SocketContext } from "../SocketContext";
 import { useNavigate } from "react-router-dom";
+import { PlayerCard } from "../components/playerCard";
 
 export interface RoundData {
   round: number;
-  mafiaEliminated: null | Array<number>;
-  detectiveEliminated: null | number;
-  doctorSaved: null | number;
+  // mafiaEliminated: null | Array<number>;
+  // detectiveEliminated: null | number;
+  // doctorSaved: null | number;
+  summary: string;
+  aliveState: Array<boolean>;
 }
 
 export default function Game() {
   const [round, setRound] = useState(1);
   const [time, setTime] = useState("night");
+  const [aliveState, setAliveState] = useState<Array<boolean>>(
+    new Array(7).fill(true)
+  );
+  const [summary, setSummary] = useState("");
+
   const socket = useContext(SocketContext);
   const navigate = useNavigate();
 
@@ -21,9 +29,12 @@ export default function Game() {
 
     console.log("use effect");
     socket.on("newRound", (data: RoundData) => {
-      console.log(data.mafiaEliminated);
-      console.log(data.detectiveEliminated);
-      console.log(data.doctorSaved);
+      // console.log(data.mafiaEliminated);
+      // console.log(data.detectiveEliminated);
+      // console.log(data.doctorSaved);
+      // console.log(data.aliveState);
+      setSummary(data.summary)
+      setAliveState(data.aliveState)
       setRound(data.round);
       setTime("day");
     });
@@ -39,18 +50,26 @@ export default function Game() {
         Day {round}: {time} {time == "night" && "..."}
       </div>
 
-      <div className="mt-8">
-        <Chat />
-
-        <button
-          onClick={(e) => {
-            socket?.emit("continue");
-            setTime("night");
-          }}
-        >
-          continue
-        </button>
+      <div>
+        {summary}
       </div>
+      
+      <Chat />
+      <div className="mt-8"></div>
+
+      <div className="grid  grid-cols-3">
+        {aliveState.map((isAlive, i) => (
+          <PlayerCard key={i} alive={isAlive} />
+        ))}
+      </div>
+      <button
+        onClick={(e) => {
+          socket?.emit("continue");
+          setTime("night");
+        }}
+      >
+        continue
+      </button>
     </>
   );
 }
