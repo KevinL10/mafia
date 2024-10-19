@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
 import { SocketContext } from "../SocketContext";
 
-export default function Chat() {
+export default function Chat({history, setHistory}: {history: Array<[string, string]>, setHistory: (value: Array<[string, string]> ) => void}) {
   const socket = useContext(SocketContext);
-  const [history, setHistory] = useState<Array<[string, string]>>([]);
+  // const [history, setHistory] = useState<Array<[string, string]>>([]);
   const [message, setMessage] = useState("");
 
   return (

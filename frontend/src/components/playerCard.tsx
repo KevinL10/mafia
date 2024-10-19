@@ -11,6 +11,7 @@ export function PlayerCard({ player }: { player: Player }) {
     <div className="border w-10 h-20">
       <div>{player.name}</div>
       {inner}
+      <div>{player.role}</div>
     </div>
   );
 }

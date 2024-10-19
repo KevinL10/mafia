@@ -31,44 +31,30 @@ def ping(data):
     print('pinged')
     emit('pong', {'msg': 'pong'})
 
-@socketio.on("startGame")
-def start_game(name):
-    global game
-    # if game is not None:
-    #     emit('error', {'msg': "game is already in progress.. something went wrong"})
-        # return
-    
-
-    print('starting game')
-    game = Game(name or "kevin")
-
-    night = game.run_night(-1)
-    
-    emit('newRound', {
-        "round": game.day,
-        # "mafiaEliminated": night.mafia_eliminated,
-        # "detectiveEliminated": night.detective_eliminated,
-        # "doctorSaved": night.doctor_saved,
-        # "summary": night.summary,
-        "players": [p.serialize() for p in night.players]
-    })
-
 @socketio.on("chat")
 def chat(data):
     game.chat(data)
 
-@socketio.on("start_night")
+@socketio.on("startNight")
 def start_night(detective_guess):
-    print('continuining')
+    global game
+
+    if game is None:
+        game = Game("kevin")
+
     night = game.run_night(detective_guess)
+
+    emit("starting night")
+    print('continuining')
+
     emit('newRound', {
         "round": game.day,
-        # "mafiaEliminated": night.mafia_eliminated,
-        # "detectiveEliminated": night.detective_eliminated,
-        # "doctorSaved": night.doctor_saved,
+        "summary": night.summary,
         "players": [p.serialize() for p in night.players]
     })
 
+
+    game.run_day(socketio)
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)

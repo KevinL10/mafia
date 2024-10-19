@@ -25,7 +25,7 @@ export function Home() {
         <p>what's your name?</p>
         <input value={name} onChange={(e) => setName(e.target.value)} />
         <button onClick={() => 
-          navigate("/game", name)
+          navigate("/game")
         }>start game </button>
       </div>
   );
