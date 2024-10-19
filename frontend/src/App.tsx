@@ -1,46 +1,35 @@
-import React, { useContext, useEffect, useState } from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import { SocketContext, SocketProvider } from "./SocketContext";
-import { TestConnect } from "./Test";
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
 
 function App() {
-  const socket = useContext(SocketContext);
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-
-  useEffect(() => {
-    if (!socket) {
-      console.log("no socket");
-      return;
-    }
-    console.log("socket");
-    // Connect to the server
-    socket.connect();
-
-    // Join the game room
-
-    socket.on("pong", (data) => {
-      console.log("pong");
-      console.log(data);
-    });
-
-    console.log("emitting");
-    socket.emit("ping", "w");
-
-    // Cleanup on unmount
-    return () => {
-      socket.disconnect();
-    };
-  }, [socket]);
+  const [count, setCount] = useState(0)
 
   return (
-    <SocketProvider>
-      <div className="">
-        <TestConnect />
+    <>
+      <div>
+        <a href="https://vitejs.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
       </div>
-    </SocketProvider>
-  );
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
+  )
 }
 
-export default App;
+export default App

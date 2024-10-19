@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit, join_room, leave_room
+from game import Game
+import time
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '.'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-games = {}
+game = None
 
 @app.route('/')
 def index():
@@ -24,6 +26,41 @@ def handle_disconnect():
 def ping(data):
     print('pinged')
     emit('pong', {'msg': 'pong'})
+
+@socketio.on("startGame")
+def start_game(data):
+    global game
+    # if game is not None:
+    #     emit('error', {'msg': "game is already in progress.. something went wrong"})
+        # return
+    
+
+    print('starting game')
+    game = Game()
+
+    night = game.run_night()
+    
+    emit('newRound', {
+        "round": game.day,
+        "mafiaEliminated": night.mafia_eliminated,
+        "detectiveEliminated": night.detective_eliminated,
+        "doctorSaved": night.doctor_saved
+    })
+
+@socketio.on("chat")
+def chat(data):
+    game.chat(data)
+
+@socketio.on("continue")
+def continue_round():
+    print('continuining')
+    night = game.run_night()
+    emit('newRound', {
+        "round": game.day,
+        "mafiaEliminated": night.mafia_eliminated,
+        "detectiveEliminated": night.detective_eliminated,
+        "doctorSaved": night.doctor_saved
+    })
 
 
 if __name__ == '__main__':
