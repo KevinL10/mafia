@@ -4,21 +4,26 @@ import { SocketContext } from "../SocketContext";
 import { useNavigate } from "react-router-dom";
 import { PlayerCard } from "../components/playerCard";
 
+export interface Player {
+  name: string;
+  alive: boolean;
+}
+
 export interface RoundData {
   round: number;
   // mafiaEliminated: null | Array<number>;
   // detectiveEliminated: null | number;
   // doctorSaved: null | number;
   summary: string;
-  aliveState: Array<boolean>;
+  // aliveState: Array<boolean>;
+  players: Array<Player>
 }
 
 export default function Game() {
   const [round, setRound] = useState(1);
   const [time, setTime] = useState("night");
-  const [aliveState, setAliveState] = useState<Array<boolean>>(
-    new Array(7).fill(true)
-  );
+  const [detectiveGuess, setDetectiveGuess] = useState("");
+  const [players, setPlayers] = useState<Array<Player>>([])
   const [summary, setSummary] = useState("");
 
   const socket = useContext(SocketContext);
@@ -33,8 +38,8 @@ export default function Game() {
       // console.log(data.detectiveEliminated);
       // console.log(data.doctorSaved);
       // console.log(data.aliveState);
-      setSummary(data.summary)
-      setAliveState(data.aliveState)
+      setSummary(data.summary);
+      setPlayers(data.players)
       setRound(data.round);
       setTime("day");
     });
@@ -50,26 +55,42 @@ export default function Game() {
         Day {round}: {time} {time == "night" && "..."}
       </div>
 
-      <div>
-        {summary}
-      </div>
-      
+      <div>{summary}</div>
+
       <Chat />
       <div className="mt-8"></div>
 
       <div className="grid  grid-cols-3">
-        {aliveState.map((isAlive, i) => (
-          <PlayerCard key={i} alive={isAlive} />
+        {players.map((player, i) => (
+          <PlayerCard key={i} player={player}/>
         ))}
       </div>
-      <button
+      {time === "day" && <button
         onClick={(e) => {
-          socket?.emit("continue");
+          // socket?.emit("start_night", );
           setTime("night");
         }}
       >
-        continue
-      </button>
+        start nighttime
+      </button> }
+
+      {time === "night" && round !== 1 && (
+        <div>
+          enter your guess for mafia
+          <input
+          className="border"
+            value={detectiveGuess}
+            onChange={(e) => setDetectiveGuess(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                socket?.emit("start_night", parseInt(detectiveGuess));
+                setDetectiveGuess("")
+              }
+            }}
+            type="number"
+          />
+        </div>
+      )}
     </>
   );
 }

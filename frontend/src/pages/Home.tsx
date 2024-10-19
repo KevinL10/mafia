@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 export function Home() {
   const socket = useContext(SocketContext);
   const navigate = useNavigate();
+  const [name, setName] = useState("")
 
   useEffect(() => {
     if(!socket) return;
@@ -21,8 +22,10 @@ export function Home() {
 
   return (
       <div>
+        <p>what's your name?</p>
+        <input value={name} onChange={(e) => setName(e.target.value)} />
         <button onClick={() => 
-          navigate("/game")
+          navigate("/game", name)
         }>start game </button>
       </div>
   );
