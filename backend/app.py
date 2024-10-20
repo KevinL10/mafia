@@ -35,12 +35,20 @@ def ping(data):
 def chat(data):
     game.chat(data)
 
+
+@socketio.on("start")
+def start():
+    global game
+    game = Game("Kevin")
+
+    print('starting')
+    # emit('init', [p.serialize() for p in game.players])
+    # socketio.sleep(1)
+
+
 @socketio.on("startNight")
 def start_night(detective_guess):
-    global game
-
-    if game is None:
-        game = Game("kevin")
+    assert game
 
     night = game.run_night(detective_guess)
 

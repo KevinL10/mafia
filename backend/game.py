@@ -175,11 +175,11 @@ spoken verbatim, so do not include any subtexts or asterisks.
         prompt = f"""
 Write a summary for the previous night {self.day} of a mafia game. Keep the summary below three sentences. Do not include any special characters or formatting.
 
-The mafia killed {', '.join(self.players[i].name for i in mafia_killed)}.
 """
+        if mafia_killed:
+            prompt += f"The mafia killed {', '.join(self.players[i].name for i in mafia_killed)}."
         if doctor_saved:
-            prompt += f" {self.players[doctor_saved].name} was saved by a doctor."
-
+            prompt += f" The mafia tried to kill {self.players[doctor_saved].name}, but they were saved by a doctor."
         if detective_eliminated:
             prompt += f" The detective discovered that {self.players[detective_eliminated].name} was part of the Mafia and eliminated them."
 

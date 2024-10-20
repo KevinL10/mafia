@@ -13,9 +13,9 @@ export default function Chat({
   const [message, setMessage] = useState("");
 
   return (
-    <div className="border rounded-md shadow-md min-h-full p-2 flex flex-col">
+    <div className="border rounded-md shadow-md min-h-[50%] p-2 flex flex-col">
       <div className="flex-1 flex justify-center">Lobby Chat</div>
-      <div className=" space-y-2">
+      <div className="space-y-1">
         {history.map((m, i) => (
           <div key={m[1] + i}>
             <p className="text-sm">
@@ -26,7 +26,7 @@ export default function Chat({
         ))}
       </div>
 
-      <div>
+      <div className="mt-2">
         <input
           className="w-full border rounded-sm  p-1  pl-2 text-sm"
           placeholder="Enter a message..."

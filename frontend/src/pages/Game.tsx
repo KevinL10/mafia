@@ -25,11 +25,20 @@ export interface RoundData {
   players: Array<Player>;
 }
 
+const NAMES = [
+  "Kevin",
+  "Olivia",
+  "Liam",
+  "Hiroshi",
+  "Sophia",
+  "Zainab",
+  "Ethan",
+]
 export default function Game() {
   const [round, setRound] = useState(1);
   const [time, setTime] = useState("night");
   const [detectiveGuess, setDetectiveGuess] = useState("");
-  const [players, setPlayers] = useState<Array<Player>>([]);
+  const [players, setPlayers] = useState<Array<Player>>([...Array(7)].map((_, i) => {return {"name": NAMES[i], "alive": true}}));
   const [summary, setSummary] = useState("");
   const [history, setHistory] = useState<Array<[string, string]>>([]);
   const [audioUrl, setAudioUrl] = useState("");
@@ -56,7 +65,7 @@ export default function Game() {
     socket.on("aiMessage", handleMessage);
 
     return () => {
-      socket.off("aiMessage", handleMessage); // Clean up the listener when the component unmounts or updates
+      socket.off("aiMessage", handleMessage); 
     };
   }, [players]);
 
@@ -82,12 +91,7 @@ export default function Game() {
       setAudioUrl(url);
     });
 
-    // socket.on("aiMessage", (message: ChatMessage) => {
-    //   console.log('got message', message.player, message.text)
-    //   console.log('players', players, players[message.player])
-    //   setHistory([...history, [players[message.player].name, message.text]])
-    // })
-
+    socket.emit("start")
     socket.emit("startNight", -1);
   }, []);
 
@@ -104,13 +108,15 @@ export default function Game() {
       <button onClick={() => navigate("/")}>- go back</button>
       <div className="mt-8">your role: Townsperson</div>
 
-      <div className="font-semibold text-2xl ">
-        Day {round}: {time} {time == "night" && "..."}
+      <div className="flex justify-center">
+        <div className="font-semibold text-2xl ">
+          Day {round}: {time} {time == "night" && "..."}
+        </div>
       </div>
 
       <div>{summary}</div>
 
-      <div className="flex flex-row gap-4">
+      <div className="flex flex-row gap-4 min-h-full mt-8">
         <div className="flex-1">
           <Chat history={history} setHistory={setHistory} />
         </div>
