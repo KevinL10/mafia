@@ -45,7 +45,7 @@ export default function Game() {
     })
   );
   const [summary, setSummary] = useState("");
-  const [history, setHistory] = useState<Array<[string, string]>>([]);
+  const [history, setHistory] = useState<Array<[string, number, string]>>([]);
   const [audioUrl, setAudioUrl] = useState("");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [selectedPlayer, setSelectedPlayer] = useState<number | null>(null);
@@ -79,7 +79,7 @@ export default function Game() {
 
       setHistory((prevHistory) => [
         ...prevHistory,
-        [players[message.player].name, message.text],
+        [players[message.player].name, message.player, message.text],
       ]);
     };
 

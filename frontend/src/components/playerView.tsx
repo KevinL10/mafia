@@ -1,7 +1,9 @@
 import { Player } from "../pages/Game";
+const COLORS = ["green", "red", "yellow", "blue", "purple", "gray", "orange"]
 
 const image_urls = [
   "kevin.png", // "Kevin",
+
   "olivia.png",
   "liam.png",
   "hiroshi.png",
@@ -11,12 +13,14 @@ const image_urls = [
 ]
 export function PlayerCard({ 
   player, 
+  idx,
   url, 
   isSelected, 
   onSelect, 
   isSelectable 
 }: { 
   player: Player; 
+  idx: number;
   url: string; 
   isSelected: boolean; 
   onSelect: () => void; 
@@ -34,7 +38,7 @@ export function PlayerCard({
       onClick={isSelectable ? onSelect : undefined}
     >
       <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-2">
-        <div className="font-bold text-white text-lg text-center drop-shadow-md">
+        <div className={`font-bold text-${COLORS[idx]}-300 text-lg text-center drop-shadow-md`}>
           {player.name}
         </div>
         {player.role && (
@@ -63,6 +67,7 @@ export function PlayerView({
       {players.map((player, i) => (
         <PlayerCard 
           key={i} 
+          idx={i}
           player={player} 
           url={image_urls[i]} 
           isSelected={selectedPlayer === i}

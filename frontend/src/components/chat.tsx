@@ -7,8 +7,8 @@ export default function Chat({
   history,
   setHistory,
 }: {
-  history: Array<[string, string]>;
-  setHistory: (value: Array<[string, string]>) => void;
+  history: Array<[string, number, string]>;
+  setHistory: (value: Array<[string, number, string]>) => void;
 }) {
   const socket = useContext(SocketContext);
   // const [history, setHistory] = useState<Array<[string, string]>>([]);
@@ -19,11 +19,12 @@ export default function Chat({
       <div className="flex-1 flex justify-center text-white">Lobby Chat</div>
       <div className="space-y-1 overflow-y-auto">
         {history.map((m, i) => {
-          const nameColor = COLORS[i];
+          const nameColor = COLORS[m[1]];
+          console.log(m)
           return (
-            <div key={m[1] + i} className="break-words">
+            <div key={m[2] + i} className="break-words">
               <p className="text-sm text-white">
-                <span className={`text-${nameColor}-700 font-bold`}>{m[0]}</span>: {m[1]}
+                <span className={`text-${nameColor}-300 font-bold`}>{m[0]}</span>: {m[2]}
               </p>
             </div>
           );
@@ -38,7 +39,7 @@ export default function Chat({
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              setHistory([...history, ["You", message]]);
+              setHistory([...history, ["You", 0, message]]);
               setMessage("");
 
               socket?.emit("chat", message);
