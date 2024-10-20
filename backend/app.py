@@ -64,3 +64,4 @@ def start_night(detective_guess):
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
+
