@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
 import { SocketContext } from "../SocketContext";
 
+const COLORS = ["green", "red", "yellow", "blue", "purple", "gray", "orange"]
+
 export default function Chat({
   history,
   setHistory,
@@ -13,17 +15,20 @@ export default function Chat({
   const [message, setMessage] = useState("");
 
   return (
-    <div className="border rounded-md shadow-md min-h-[50%] p-2 flex flex-col">
+    <div className="border rounded-md shadow-md min-h-[80%] max-h-[80%] p-2 flex flex-col">
       <div className="flex-1 flex justify-center">Lobby Chat</div>
-      <div className="space-y-1">
-        {history.map((m, i) => (
-          <div key={m[1] + i}>
-            <p className="text-sm">
-            {m[0]}: {m[1]}
-
-            </p>
-          </div>
-        ))}
+      <div className="space-y-1 overflow-y-scroll">
+        {history.map((m, i) => {
+          const colorIndex = m[0].charCodeAt(0) % COLORS.length;
+          const nameColor = COLORS[colorIndex];
+          return (
+            <div key={m[1] + i}>
+              <p className="text-sm">
+                <span className={`text-${nameColor}-700`}>{m[0]}</span>: {m[1]}
+              </p>
+            </div>
+          );
+        })}
       </div>
 
       <div className="mt-2">

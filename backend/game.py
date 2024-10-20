@@ -35,7 +35,7 @@ class Player:
         
 
         # DEBUG: always show
-        data["role"] = self.role.value
+        # data["role"] = self.role.value
         return data
 
 
@@ -141,6 +141,9 @@ spoken verbatim, so do not include any subtexts or asterisks.
         # send a bunch of websocket results
         pass
 
+    def is_game_won(self) -> bool:
+        return not self.players[3].alive
+
     def run_night(self, detective_guess: int) -> NightData:
         self.state = State.NIGHT
 
@@ -185,13 +188,12 @@ Write a summary for the previous night {self.day} of a mafia game. Keep the summ
 
         print(prompt)
         summary = self.client.complete(prompt)
-        print("getting tts wav")
+        # print("getting tts wav")
         # wav_bytes = self.tts_clientdd.to_wav(summary[:100])
         # print(len(wav_bytes))
         # emit('audio', wav_bytes)
 
         self.day += 1
-        print(prompt)
         # todo: just generate a natural language summary on the backend and send that as an update to the frontend
 
         # simulate nighttime happening
@@ -200,3 +202,4 @@ Write a summary for the previous night {self.day} of a mafia game. Keep the summ
         return NightData(summary, self.players)
 
         # compute who dies..
+

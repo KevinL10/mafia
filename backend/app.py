@@ -52,17 +52,15 @@ def start_night(detective_guess):
 
     night = game.run_night(detective_guess)
 
-    emit("starting night")
-    print('continuining')
-
-    emit('newRound', {
+    emit("newRound", {
         "round": game.day,
         "summary": night.summary,
-        "players": [p.serialize() for p in night.players]
+        "players": [p.serialize() for p in night.players],
+        "gameWon": game.is_game_won()
     })
 
-
     game.run_day(socketio)
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)

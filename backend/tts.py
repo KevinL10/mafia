@@ -34,7 +34,7 @@ class TTSClient:
         self.last_duration = None
 
     def to_wav(self, player: int, transcript: str) -> bytes:
-        return b'abcd'
+        # return b'abcd'
         output_format = {
             "container": "raw",
             "encoding": "pcm_f32le",
