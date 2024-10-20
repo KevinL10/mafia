@@ -59,7 +59,9 @@ export default function Game() {
 
   const handlePlayerSelect = (index: number) => {
     if (isInvestigating) {
-      setSelectedPlayer(prevSelected => prevSelected === index ? null : index);
+      setSelectedPlayer((prevSelected) =>
+        prevSelected === index ? null : index
+      );
       // if (players[index].role === "mafia") {
       //   setGameWon(true);
       // }
@@ -139,11 +141,8 @@ export default function Game() {
   if (!gameStarted) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <button
-          onClick={() => setGameStarted(true)}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Start Game
+        <button onClick={() => setGameStarted(true)} className="rpgui-button">
+          <p className="text-white">Start Game</p>
         </button>
       </div>
     );
@@ -152,30 +151,30 @@ export default function Game() {
   return (
     <div className="p-8 h-screen">
       <audio ref={audioRef} src={audioUrl} />
-      {/* <button onClick={() => navigate("/")}>- go back</button> */}
 
-      <div className="flex justify-center items-center">
-        <div className="flex-1 font-semibold text-2xl ">
+      <div className="relative">
+        <div className="text-center font-semibold text-2xl">
           <div className="flex justify-center items-center">
-            Day {round}: {time} 
+            Day {round}: {time == "night"? "Nighttime": time == "day"? "Day": time}
             {time === "night" && isLoading && (
               <div className="ml-2 animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
             )}
           </div>
         </div>
         {time === "daytime" && !isInvestigating && (
-          <div className="border rounded-md p-2 hover:bg-gray-200">
+          <div className="absolute top-0 right-0">
             <button
               onClick={() => {
                 setIsInvestigating(true);
               }}
+              className="rpgui-button"
             >
-              Investigate Player
+              <p className="text-white">Investigate Player</p>
             </button>
           </div>
         )}
         {isInvestigating && (
-          <div className="border rounded-md p-2 hover:bg-gray-200">
+          <div className="absolute top-0 right-0">
             <button
               onClick={() => {
                 if (selectedPlayer !== null) {
@@ -188,8 +187,9 @@ export default function Game() {
                   alert("Please select a player to investigate.");
                 }
               }}
+              className="rpgui-button"
             >
-              Confirm Investigation
+              <p className="text-white">Confirm Investigation</p>
             </button>
           </div>
         )}
@@ -201,29 +201,46 @@ export default function Game() {
         </div>
 
         <div className="flex-[2]">
-          <PlayerView 
-            players={players} 
-            onPlayerSelect={handlePlayerSelect} 
+          <PlayerView
+            players={players}
+            onPlayerSelect={handlePlayerSelect}
             selectedPlayer={selectedPlayer}
             isSelectable={isInvestigating}
           />
         </div>
-        <div className="flex-1">{summary}</div>
+        <div className="flex-1 min-h-[50%]">
+          <div className="text-white rpgui-container framed min-h-[80%] max-h-[80%] p-2">
+            <div className="flex justify-center">Announcements</div>
+              
+              <div className="text-sm mt-2">
+              {summary}
+
+              </div>
+            <div className="mt-2  invisible">
+              <input
+                className="rpgui-input px-2 py-1 rounded-md"
+                placeholder="Enter a message... ........."
+              />
+            </div>
+          </div>
+        </div>
       </div>
       {gameWon && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+          <div className="rpgui-container framed">
             <h2 className="text-3xl font-bold mb-4">Congratulations!</h2>
-            <p className="text-xl mb-4">You've successfully identified the Mafia and won the game!</p>
+            <p className="text-xl mb-4">
+              You've successfully identified the Mafia and won the game!
+            </p>
             <button
               onClick={() => {
                 resetGame();
                 socket?.emit("start");
                 socket?.emit("startNight", -1);
               }}
-              className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
+              className="rpgui-button"
             >
-              Play Again
+              <p>Play Again</p>
             </button>
           </div>
         </div>
