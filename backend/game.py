@@ -173,14 +173,17 @@ spoken verbatim, so do not include any subtexts or asterisks.
             self.players[detective_guess].alive = False
 
         prompt = f"""
-Write a summary for the previous night {self.day} of a mafia game. Keep the summary short.
+Write a summary for the previous night {self.day} of a mafia game. Keep the summary below three sentences. Do not include any special characters or formatting.
 
-people mafia killed: {', '.join(self.players[i].name for i in mafia_killed)}
-
-people saved by doctor: {self.players[doctor_saved].name if doctor_saved else "none"}
-
-mafia members eliminated by detective: {self.players[detective_eliminated].name if detective_eliminated else "none"}
+The mafia killed {', '.join(self.players[i].name for i in mafia_killed)}.
 """
+        if doctor_saved:
+            prompt += f" {self.players[doctor_saved].name} was saved by a doctor."
+
+        if detective_eliminated:
+            prompt += f" The detective discovered that {self.players[detective_eliminated].name} was part of the Mafia and eliminated them."
+
+        print(prompt)
         summary = self.client.complete(prompt)
         print("getting tts wav")
         # wav_bytes = self.tts_clientdd.to_wav(summary[:100])

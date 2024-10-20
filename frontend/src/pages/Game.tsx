@@ -40,9 +40,9 @@ export default function Game() {
 
   useEffect(() => {
     if (!socket) return;
-    if(players.length === 0) return;
+    if (players.length === 0) return;
 
-    console.log("players", players)
+    console.log("players", players);
     const handleMessage = (message: ChatMessage) => {
       console.log("got message", message.player, message.text);
       console.log("players", players, players[message.player]);
@@ -74,13 +74,13 @@ export default function Game() {
     });
 
     socket.on("audio", (chunk) => {
-      console.log('got audio')
-      const blob = new Blob([chunk], { type: 'audio/wav' });
-      console.log(blob)
+      console.log("got audio");
+      const blob = new Blob([chunk], { type: "audio/wav" });
+      console.log(blob);
       const url = URL.createObjectURL(blob);
-      console.log(url)
-      setAudioUrl(url)
-    })
+      console.log(url);
+      setAudioUrl(url);
+    });
 
     // socket.on("aiMessage", (message: ChatMessage) => {
     //   console.log('got message', message.player, message.text)
@@ -91,16 +91,16 @@ export default function Game() {
     socket.emit("startNight", -1);
   }, []);
 
-
   useEffect(() => {
     // Play the audio automatically when the URL is available
     if (audioUrl && audioRef.current) {
-        audioRef.current.play();
+      audioRef.current.play();
     }
-}, [audioUrl]);
+  }, [audioUrl]);
   return (
-    <>
-      <audio ref={audioRef} src={audioUrl} /> 
+    <div className="p-8 h-screen">
+
+      <audio ref={audioRef} src={audioUrl} />
       <button onClick={() => navigate("/")}>- go back</button>
       <div className="mt-8">your role: Townsperson</div>
 
@@ -110,14 +110,18 @@ export default function Game() {
 
       <div>{summary}</div>
 
-      <Chat history={history} setHistory={setHistory} />
-      <div className="mt-8"></div>
+      <div className="flex flex-row gap-4">
+        <div className="flex-1">
+          <Chat history={history} setHistory={setHistory} />
+        </div>
 
-      <div className="grid  grid-cols-3">
-        {players.map((player, i) => (
-          <PlayerCard key={i} player={player} />
-        ))}
+        <div className="flex-1 grid  grid-cols-3">
+          {players.map((player, i) => (
+            <PlayerCard key={i} player={player} />
+          ))}
+        </div>
       </div>
+
       {time === "day" && (
         <button
           onClick={(e) => {
@@ -138,7 +142,7 @@ export default function Game() {
             onChange={(e) => setDetectiveGuess(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                setTime("night")
+                setTime("night");
                 socket?.emit("startNight", parseInt(detectiveGuess));
                 setDetectiveGuess("");
               }
@@ -147,6 +151,6 @@ export default function Game() {
           />
         </div>
       )}
-    </>
+    </div>
   );
 }
