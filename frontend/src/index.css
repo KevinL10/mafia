@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .win-banner {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 20px;
   text-align: center;
@@ -12,9 +12,24 @@
   margin-bottom: 20px;
 }
 body {
-  background-image: url('/bg.jpg');
+  background-image: url("/bg.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
+}
+
+@font-face {
+  font-family: "Consolas";
+  src: url("/fonts/Consolas.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  /* font-family: "Pixelify Sans", sans-serif; */
+  font-family: "Consolas", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }

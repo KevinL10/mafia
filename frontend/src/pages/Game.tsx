@@ -155,14 +155,14 @@ export default function Game() {
       <div className="relative">
         <div className="text-center font-semibold text-2xl">
           <div className="flex justify-center items-center">
-            Day {round}: {time == "night"? "Nighttime": time == "day"? "Day": time}
+            Day {round}: {time == "night"? "Nighttime": time == "daytime"? "Day": time}
             {time === "night" && isLoading && (
               <div className="ml-2 animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
             )}
           </div>
         </div>
         {time === "daytime" && !isInvestigating && (
-          <div className="absolute top-0 right-0">
+          <div className="absolute -top-4 right-8">
             <button
               onClick={() => {
                 setIsInvestigating(true);
@@ -174,7 +174,7 @@ export default function Game() {
           </div>
         )}
         {isInvestigating && (
-          <div className="absolute top-0 right-0">
+          <div className="absolute -top-4 right-8">
             <button
               onClick={() => {
                 if (selectedPlayer !== null) {
@@ -209,7 +209,7 @@ export default function Game() {
           />
         </div>
         <div className="flex-1 min-h-[50%]">
-          <div className="text-white rpgui-container framed min-h-[80%] max-h-[80%] p-2">
+          <div className="text-white rpgui-container framed min-h-[80%] max-h-[80%] p-2 mr-8">
             <div className="flex justify-center">Announcements</div>
               
               <div className="text-sm mt-2">
@@ -227,7 +227,7 @@ export default function Game() {
       </div>
       {gameWon && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="rpgui-container framed">
+          <div className="rpgui-container framed text-white">
             <h2 className="text-3xl font-bold mb-4">Congratulations!</h2>
             <p className="text-xl mb-4">
               You've successfully identified the Mafia and won the game!
